@@ -13,13 +13,18 @@
       <div class="product-display">
         <div class="product-container">
           <div class="product-image">
-            <img src='./assets/images/t-shirt-blue.png' alt=”img-product”>
+            <img :src=image alt=”img-product”>
           </div>
           <div class="product-info">
-            <h1>T-Shirt</h1>
-            <p>In Stock</p>
+            <h1>{{ productTitle }}</h1>
+            <p v-if="isStock > 10">In Stock</p>
+            <p v-else-if="isStock <= 10 && isStock >= 1">Almost of stock</p>
+            <p v-else>Out of stock</p>
           </div>
-          
+        </div>
+        <div class="stock-changer">
+          <label for="">Modificar item em estoque</label>
+          <input type="number" min="1" max="100" v-model="isStock" />
         </div>
       </div>
     </div>
@@ -29,13 +34,13 @@
 
       createApp({
         setup() {
-          const message = ref("Hello vue!");
           return {
-            message,
+            productTitle: ref("T-shirt"),
+            image: ref("./assets/images/t-shirt-blue.png"),
+            isStock: ref(100),
           };
         },
       }).mount("#app");
     </script>
   </body>
 </html>
-/home/pedro.malaquias/Documentos/vue3_curso/assets/images/t-shirt-blue.png
