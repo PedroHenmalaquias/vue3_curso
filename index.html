@@ -17,7 +17,7 @@
             <img :src=image alt=”img-product”>
           </div>
           <div class="product-info">
-            <h1>{{ productTitle }}</h1>
+            <h1>{{ productTitle + ' ' + brand }}</h1>
             <p v-if="isStock > 10">In Stock</p>
             <p v-else-if="isStock <= 10 && isStock >= 1">Almost of stock</p>
             <p v-else>Out of stock</p>
@@ -26,11 +26,11 @@
                 {{ detail }}
               </li>
             </ul>
-            <div v-for="variant in variants" :key="variant.id" @mouseover="changeImage(variant.variantImage)">
-              {{ variant.color }}
+            <div v-for="variant in variants" :key="variant.id" @click="changeImage(variant.variantImage)" class="color-circle" :style="{ backgroundColor: variant.color }"></div>
+              <!-- {{ variant.color }} -->
             </div>
             <div class="buttons">
-            <button class="button" @click="addToCart">Add to cart</button>
+            <button class="button" @click="addToCart" :disabled="isStock < 1" :class="{ disabledButton : isStock < 1}">Add to cart</button>
             <button class="button" @click="removeToCart">Remove to cart</button>
           </div>
           </div>
@@ -47,12 +47,24 @@
 
       createApp({
         setup() {
+          const isStock = ref(100);
           const cart = ref(0);
           const addToCart = () => {
-            cart.value++;
+            if( cart.value < isStock.value) {
+              // isStock.value--;
+              cart.value++;
+            } else {
+              alert("No more items in stock.");
+            }
+            // cart.value++;
           };
           const removeToCart = () => {
-            cart.value--;
+            if (cart.value > 0) {
+              cart.value--;
+            } else {
+              alert("No items in the cart to remove.");
+            }
+            // cart.value--;
             };
             const image = ref("./assets/images/t-shirt-blue.png");
             const changeImage = (variantImage) => {
@@ -60,8 +72,9 @@
             };
           return {
             productTitle: ref("T-shirt"),
+            brand: 'Marconyu',
             image,
-            isStock: ref(100),
+            isStock,
             details: [
               "100% cotton",
               "Blue color",
